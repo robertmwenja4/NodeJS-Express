@@ -1,0 +1,2 @@
+creating package.json => npm init
+Adding lodash library => npm i --save lodash
