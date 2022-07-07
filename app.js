@@ -13,7 +13,7 @@ const app = express();
 const dbURI = 'mongodb+srv://robaranks:KNcKiNQJVpVCdQ4S@cluster0.74ibd.mongodb.net/Nodejs-Express?retryWrites=true&w=majority';
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => {
-        app.listen(3000);
+        app.listen(process.env.PORT || 3000);
         console.log('Connected to MongoDB')
     })
     .catch((err) => console.log(err));
@@ -37,13 +37,24 @@ app.use(express.static('public'));
 //Using the logger middleware
 app.use(morgan('combined'))
 
-app.get('/add-blog', (req, res) => {
+/* app.get('/add-blog', (req, res) => {
     const blog = new Blog({
         title: 'New Blog 2',
         snippet: 'This is a new blog 2 added',
         body: 'More information on the new blog 2'
     });
     blog.save()
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
+//Get single blog post
+app.get('/single-blog', (req, res) => {
+    Blog.findById("62c70f94f6bca0fe206e7efe")
         .then((result) => {
             res.send(result);
         })
@@ -60,12 +71,12 @@ app.get('/all-blogs', (req, res) => {
         .catch((err) => {
             console.log(err);
         });
-});
+}); */
 
 app.get('/', (req, res) => {
     /* res.sendFile('./views/index.html', { root: __dirname }); */
     //Render views in ejs
-    const blogs = [{
+    /* const blogs = [{
             title: 'Computer Networks',
             snippet: 'A computer network is a set of computers sharing resources located on or provided by network nodes.'
         },
@@ -77,9 +88,22 @@ app.get('/', (req, res) => {
             title: 'Networks',
             snippet: 'A computer network is a set of computers sharing resources located on or provided by network nodes.'
         },
-    ];
-    res.render('index', { title: 'Home', blogs: blogs });
+    ]; */
+    //res.render('index', { title: 'Home', blogs: blogs });
+    res.redirect('/blogs');
 });
+
+//All blogs
+app.get('/blogs', (req, res) => {
+    Blog.find().sort({ createdAt: -1 })
+        .then((result) => {
+            res.render('index', { title: 'All Blogs', blogs: result })
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+})
+
 app.get('/about', (req, res) => {
     // res.sendFile('./views/about.html', { root: __dirname });
     res.render('about', { title: 'About' });
