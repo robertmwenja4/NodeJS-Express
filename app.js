@@ -3,7 +3,8 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const { result } = require('lodash');
-const Blog = require('./models/blogs');
+const blogRoutes = require('./routes/blogRoutes');
+
 
 
 
@@ -34,7 +35,8 @@ app.set('views', 'myviews');
 }); */
 //Add middleware for static files
 app.use(express.static('public'));
-//Using the logger middleware
+app.use(express.urlencoded({ extended: true }))
+    //Using the logger middleware
 app.use(morgan('combined'))
 
 /* app.get('/add-blog', (req, res) => {
@@ -94,22 +96,11 @@ app.get('/', (req, res) => {
 });
 
 //All blogs
-app.get('/blogs', (req, res) => {
-    Blog.find().sort({ createdAt: -1 })
-        .then((result) => {
-            res.render('index', { title: 'All Blogs', blogs: result })
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-})
+app.use('/blogs', blogRoutes);
 
 app.get('/about', (req, res) => {
     // res.sendFile('./views/about.html', { root: __dirname });
     res.render('about', { title: 'About' });
-});
-app.get('/blogs/create', (req, res) => {
-    res.render('create', { title: 'Create Blogs' });
 });
 //Redirect
 app.get('/about-us', (req, res) => {
