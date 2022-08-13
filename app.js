@@ -11,10 +11,10 @@ const blogRoutes = require('./routes/blogRoutes');
 const app = express();
 
 //Connect to mongoDB
-const dbURI = 'mongodb+srv://robaranks:KNcKiNQJVpVCdQ4S@cluster0.74ibd.mongodb.net/Nodejs-Express?retryWrites=true&w=majority';
+const dbURI = process.env.MONGODB_URL || 'mongodb+srv://robaranks:KNcKiNQJVpVCdQ4S@cluster0.74ibd.mongodb.net/Nodejs-Express?retryWrites=true&w=majority';
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => {
-        app.listen(process.env.PORT || 3000);
+        app.listen(process.env.PORT || 5000);
         console.log('Connected to MongoDB')
     })
     .catch((err) => console.log(err));
